@@ -1,0 +1,74 @@
+#!/bin/bash
+clear
+echo -e "indica el nombre del usuario a modificar:\c "
+read user
+cat /etc/passwd | grep $user >> /dev/null
+if [ $? -eq 0 ]; then
+echo -e "El usuario ya existe"
+fi
+while [ $? -ne 5 ]
+do
+echo -e "1-crear usuario"
+echo -e "2-cambiar o darle una password"
+echo -e "3-modificar usuario"
+echo -e "4-eliminar usuario"
+echo -e "5-salir"
+echo -e "indica una alternativa: \c"
+read opcion 
+case $opcion in
+	1)echo -e "crear usuario $user"
+	useradd -g ftp -d /var/ftp/pub/$user $user
+	read -n 1 -p "el usuario $user, fue creado"
+	clear
+	;;
+	2)echo -e "cambiar password del usuario $user"
+	echo -e "indica el nuevo password: \c"
+  read -s clave
+  echo "$clave" | passwd --stdin $user
+	read -n 1 -p "Al usuario ya le cambiamos la clave, apreta una tecla para continuar"
+	clear	
+	;;
+	3) echo -e "indica el cambio que necesita el usuario"
+	clear
+	echo -e " 1- cambiar password"
+	echo -e " 2- cambio del directorio"	
+	echo -e " 3- cambio de grupo"
+	echo -e " 4- cambio de uid"
+	read opcion 	
+		case $opcion in
+		1) echo -e "agrega una nueva password: \c"
+		read -s clave
+		echo "$clave" | passwd --stdin $user >> /dev/null
+		;;
+		2) echo "indica el directorio de inicio para el usuario:\c "
+		read dir
+		chmod -d $dir $user
+		echo "el usuario , $user, cambio su directorio de inicio a $dir"
+		;;
+		3)echo -e "indica el grupo que quieres cambiar:\c "
+		read grupo
+		chmod -g $grupo $user
+		echo -e "el usuario agrego el grupo, $grupo"
+		;;
+		4) echo -e "indica un nuevo UID, para $user"
+		uidactual=$(id $user | cut -d " " -f 1) 
+		read nuid
+		chmod -u $nuid $user
+		;;
+		*)read -n 1 -p "indica opcion valida"
+		esac
+;;
+	 4) echo -e "indica el nombre de usuario a eliminar"
+	read eliminado
+	cat /etc/passwd | grep $user
+	if [ $? -eq 0 ]; then
+	echo -e "eliminando el usuario"
+	userdel $eliminado
+	fi
+	;;
+	5)exit
+	;;
+	*)read -n 1 -p "selecciona opcion valida"
+	;;
+esac
+done
