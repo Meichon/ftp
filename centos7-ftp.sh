@@ -1,7 +1,13 @@
-
-read -n 1 -p "el usuario ya existe, apreta una tecla para salir"
+if [ $EUID -ne 0 ]; then
+read -n 1 -p "el Script debe ser ejecutado por root, apreta una tecla para continuar."
+exit 1
+else
+clear
+echo ########################Instalacion FTP###################
 yum install vsftpd -y >> /dev/null
+echo #######################configuracion del Servicio##########
 cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
+rm -rf /etc/vsftpd/vsftpd.conf
 touch /etc/vsftpd/vsftpd.conf
 echo anonymous_enable=NO >> /etc/vsftpd/vsftpd.conf
 echo write_enable=YES >> /etc/vsftpd/vsftpd.conf
@@ -38,5 +44,10 @@ echo tcp_wrappers=YES >> /etc/vsftpd/vsftpd.conf
 setsebool -P allow_ftpd_full_access on
 setsebool -P httpd_enable_ftp_server on
 setsebool -P ftp_home_dir on
+systemctl restart vsftpd
+echo ######################################################
+read -n 1 -p "Debes configurar firewall para finalizar"
+echo ######################################################
+fi
 
-
+ 
