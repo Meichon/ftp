@@ -21,7 +21,7 @@ case $opcion in
 	read -n 1 -p "el usuario $user, fue creado"
 	clear
 	;;
-	2)echo -e "cambiar password del usuario $user"
+	2)echo -e "cambiar o crear clave al usuario $user"
 	echo -e "indica el nuevo password: \c"
   read -s clave
   echo "$clave" | passwd --stdin $user
@@ -66,7 +66,9 @@ case $opcion in
 	userdel $eliminado
 	fi
 	;;
-	5)exit
+	5)read -n 1 -p "Apreta una tecla para salir"
+	clear	
+	exit
 	;;
 	*)read -n 1 -p "selecciona opcion valida"
 	;;

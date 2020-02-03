@@ -43,7 +43,7 @@ echo userlist_enable=YES >> /etc/vsftpd/vsftpd.conf
 echo tcp_wrappers=YES >> /etc/vsftpd/vsftpd.conf
 setsebool -P allow_ftpd_full_access on
 setsebool -P httpd_enable_ftp_server on
-setsebool -P ftp_home_dir on
+setsebool -P tftp_home_dir on
 systemctl restart vsftpd
 echo ######################################################
 read -n 1 -p "Debes configurar firewall para finalizar"
