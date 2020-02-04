@@ -17,7 +17,8 @@ echo -e "indica una alternativa: \c"
 read opcion 
 case $opcion in
 	1)echo -e "crear usuario $user"
-	useradd -g ftp -d /var/ftp/pub/$user -s /sbin/nologin $user
+	useradd -g ftp -m -d /var/ftp/pub/$user -s /sbin/nologin $user
+	echo $user >> /etc/vsftpd/chroot_list
 	read -n 1 -p "el usuario $user, fue creado"
 	clear
 	;;
